@@ -7,6 +7,13 @@ exports.submitAnswer = async (req, res) => {
 
     const { assignmentId, answer } = req.body;
 
+    // can't submit empty answer
+    if (!answer || answer.trim() === "") {
+      return res.status(400).json({
+        message: "Answer cannot be empty"
+      });
+    }
+
     const assignment = await Assignment.findById(assignmentId);
 
     if (!assignment) {
@@ -19,6 +26,12 @@ exports.submitAnswer = async (req, res) => {
       return res.status(400).json({
         message: "Assignment is not open for submissions"
       });
+    }
+
+    if (new Date() > assignment.dueDate) {
+        return res.status(400).json({
+        message: "Submission deadline has passed"
+    });
     }
 
     const existingSubmission = await Submission.findOne({
@@ -54,6 +67,8 @@ exports.submitAnswer = async (req, res) => {
   }
 
 };
+
+
 exports.getSubmissionsForAssignment = async (req, res) => {
 
   try {
@@ -61,6 +76,27 @@ exports.getSubmissionsForAssignment = async (req, res) => {
     const submissions = await Submission.find({
       assignmentId: req.params.assignmentId
     }).populate("studentId", "name email");
+
+    res.json(submissions);
+
+  } catch (error) {
+
+    res.status(500).json({
+      message: error.message
+    });
+
+  }
+
+};
+
+
+exports.getMySubmissions = async (req, res) => {
+
+  try {
+
+    const submissions = await Submission.find({
+      studentId: req.user.id
+    }).populate("assignmentId", "title description dueDate");
 
     res.json(submissions);
 

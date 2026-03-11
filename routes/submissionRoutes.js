@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { submitAnswer ,getSubmissionsForAssignment} = require("../controllers/submissionController");
+const { submitAnswer ,getSubmissionsForAssignment,getMySubmissions} = require("../controllers/submissionController");
 
 const authMiddleware = require("../middleware/authMiddleware");
 const roleMiddleware = require("../middleware/roleMiddleware");
@@ -18,5 +18,12 @@ router.get(
  authMiddleware,
  roleMiddleware("teacher"),
  getSubmissionsForAssignment
+);
+
+router.get(
+ "/my",
+ authMiddleware,
+ roleMiddleware("student"),
+ getMySubmissions
 );
 module.exports = router;
