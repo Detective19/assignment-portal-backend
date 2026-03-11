@@ -6,7 +6,8 @@ require("dotenv").config();
 const app = express();
 
 const authRoutes = require("./routes/authRoutes");
-const authMiddleware = require("./middleware/authMiddleware");
+const authMiddleware = require("./middleware/authMiddleware"); // for testing protected routes
+const assignmentRoutes = require("./routes/assignmentRoutes");
 
 
 app.use(cors());
@@ -18,9 +19,9 @@ mongoose.connect(process.env.MONGO_URI)
 .catch(err => console.log(err));
 
 
-
-
 app.use("/api/auth", authRoutes);
+
+app.use("/api/assignments", assignmentRoutes);
 app.get("/", (req, res) => {
   res.send("Sab thik hai!");
 });
