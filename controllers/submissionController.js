@@ -98,7 +98,8 @@ exports.getMySubmissions = async (req, res) => {
       studentId: req.user.id
     }).populate("assignmentId", "title description dueDate");
 
-    res.json(submissions);
+    res.json({totalSubmissions: submissions.length,
+      submissions});
 
   } catch (error) {
 
