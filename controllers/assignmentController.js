@@ -122,3 +122,20 @@ exports.completeAssignment = async (req, res) => {
 
   }
 };
+exports.getPublishedAssignments = async (req, res) => {
+  try {
+
+    const assignments = await Assignment.find({
+      status: "published"
+    });
+
+    res.json(assignments);
+
+  } catch (error) {
+
+    res.status(500).json({
+      message: error.message
+    });
+
+  }
+};
