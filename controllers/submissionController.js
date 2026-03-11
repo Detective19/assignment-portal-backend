@@ -54,3 +54,22 @@ exports.submitAnswer = async (req, res) => {
   }
 
 };
+exports.getSubmissionsForAssignment = async (req, res) => {
+
+  try {
+
+    const submissions = await Submission.find({
+      assignmentId: req.params.assignmentId
+    }).populate("studentId", "name email");
+
+    res.json(submissions);
+
+  } catch (error) {
+
+    res.status(500).json({
+      message: error.message
+    });
+
+  }
+
+};
