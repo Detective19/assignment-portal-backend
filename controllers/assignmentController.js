@@ -64,3 +64,26 @@ exports.publishAssignment = async (req, res) => {
   }
 
 };
+exports.getAssignments = async (req, res) => {
+
+  try {
+
+    const filter = { createdBy: req.user.id };
+
+    if (req.query.status) {
+      filter.status = req.query.status;
+    }
+
+    const assignments = await Assignment.find(filter);
+
+    res.json(assignments);
+
+  } catch (error) {
+
+    res.status(500).json({
+      message: error.message
+    });
+
+  }
+
+};
