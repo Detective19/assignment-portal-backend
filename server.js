@@ -6,7 +6,6 @@ require("dotenv").config();
 const app = express();
 
 const authRoutes = require("./routes/authRoutes");
-const authMiddleware = require("./middleware/authMiddleware"); // for testing protected routes
 const assignmentRoutes = require("./routes/assignmentRoutes");
 
 

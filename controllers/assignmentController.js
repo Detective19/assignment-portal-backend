@@ -87,3 +87,38 @@ exports.getAssignments = async (req, res) => {
   }
 
 };
+
+exports.completeAssignment = async (req, res) => {
+  try {
+
+    const assignment = await Assignment.findById(req.params.id);
+
+    if (!assignment) {
+      return res.status(404).json({
+        message: "Assignment not found"
+      });
+    }
+
+    if (assignment.status !== "published") {
+      return res.status(400).json({
+        message: "Only published assignments can be completed"
+      });
+    }
+
+    assignment.status = "completed";
+
+    await assignment.save();
+
+    res.json({
+      message: "Assignment marked as completed",
+      assignment
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      message: error.message
+    });
+
+  }
+};

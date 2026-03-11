@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { createAssignment, publishAssignment ,getAssignments} = require("../controllers/assignmentController");
+const { createAssignment, publishAssignment ,getAssignments , completeAssignment} = require("../controllers/assignmentController");
 
 const authMiddleware = require("../middleware/authMiddleware");
 const roleMiddleware = require("../middleware/roleMiddleware");
@@ -24,6 +24,13 @@ router.get(
  authMiddleware,
  roleMiddleware("teacher"),
  getAssignments
+);
+
+router.put(
+ "/:id/complete",
+ authMiddleware,
+ roleMiddleware("teacher"),
+ completeAssignment
 );
 
 module.exports = router;
