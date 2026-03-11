@@ -7,6 +7,9 @@ const app = express();
 
 const authRoutes = require("./routes/authRoutes");
 const assignmentRoutes = require("./routes/assignmentRoutes");
+const submissionRoutes = require("./routes/submissionRoutes");
+
+
 
 
 app.use(cors());
@@ -21,6 +24,7 @@ mongoose.connect(process.env.MONGO_URI)
 app.use("/api/auth", authRoutes);
 
 app.use("/api/assignments", assignmentRoutes);
+app.use("/api/submissions", submissionRoutes);
 app.get("/", (req, res) => {
   res.send("Sab thik hai!");
 });
