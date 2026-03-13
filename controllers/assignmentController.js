@@ -28,6 +28,46 @@ exports.createAssignment = async (req, res) => {
 
 };
 
+exports.updateAssignment = async (req, res) => {
+
+  try {
+
+    const assignment = await Assignment.findById(req.params.id);
+
+    if (!assignment) {
+      return res.status(404).json({
+        message: "Assignment not found"
+      });
+    }
+
+    // only draft can be edited
+    if (assignment.status !== "draft") {
+      return res.status(400).json({
+        message: "Only draft assignments can be edited"
+      });
+    }
+
+    assignment.title = req.body.title || assignment.title;
+    assignment.description = req.body.description || assignment.description;
+    assignment.dueDate = req.body.dueDate || assignment.dueDate;
+
+    await assignment.save();
+
+    res.json({
+      message: "Assignment updated",
+      assignment
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      message: error.message
+    });
+
+  }
+
+};
+
 exports.publishAssignment = async (req, res) => {
 
   try {
@@ -138,4 +178,38 @@ exports.getPublishedAssignments = async (req, res) => {
     });
 
   }
+};
+exports.deleteAssignment = async (req, res) => {
+
+  try {
+
+    const assignment = await Assignment.findById(req.params.id);
+
+    if (!assignment) {
+      return res.status(404).json({
+        message: "Assignment not found"
+      });
+    }
+
+    // allow delete only if draft
+    if (assignment.status !== "draft") {
+      return res.status(400).json({
+        message: "Only draft assignments can be deleted"
+      });
+    }
+
+    await Assignment.findByIdAndDelete(req.params.id);
+
+    res.json({
+      message: "Assignment deleted successfully"
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      message: error.message
+    });
+
+  }
+
 };
